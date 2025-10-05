@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package github.dubininme.grpc.protobuf.api.example;
+
+import "api/example/messages.proto";
+
+option go_package = "pkg/api/example";
+
+// Example service definition. 
+service Example {
+  // CreatePost -  creates a new tweet
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  // ListPosts -  lists all tweets
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+}

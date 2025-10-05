@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package github.dubininme.grpc.protobuf.api.example;
+
+import "buf/validate/validate.proto";
+
+option go_package = "pkg/api/example";
+
+// CreatePostRequest is the request message for creating a new tweet
+message CreatePostRequest {
+  // Title of the tweet
+  string title = 1 [json_name = "title", (buf.validate.field).string = {min_len:1, max_len: 256}];
+  // Author ID of the tweet 
+  string author_id = 2 [json_name = "author_id", (buf.validate.field).string.min_len=1];
+  // Content of the tweet
+  string content = 3 [json_name = "content", (buf.validate.field).string = {min_len:1, max_len:2048}];
+}
+
+// CreatePostResponse is the response message for creating a new tweet
+message CreatePostResponse {
+  // post_id is the ID of the created tweet
+  uint64 post_id = 1 [json_name = "post_id"];
+}
+
+message ListPostsRequest {}
+message ListPostsResponse {}
