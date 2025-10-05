@@ -90,9 +90,8 @@ func (s *ExampleService) CreatePost(ctx context.Context, req *example.CreatePost
 	s.mx.Unlock()
 
 	header := metadata.Pairs("header-key", "val")
-	if err := grpc.SetHeader(ctx, header); err != nil {
-		log.Println("failed to set header:", err)
-	}
+	grpc.SetHeader(ctx, header)
+	grpc.SetTrailer(ctx, header)
 
 	return &example.CreatePostResponse{
 		PostId: id,

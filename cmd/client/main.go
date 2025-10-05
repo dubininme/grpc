@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/dubininme/grpc/pkg/api/example"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -23,12 +25,21 @@ func main() {
 	}
 
 	client := example.NewExampleClient(conn)
+	ctx := context.Background()
 
-	resp, err := client.CreatePost(context.Background(), &example.CreatePostRequest{
+	req := &example.CreatePostRequest{
 		Title:    "My first post",
 		AuthorId: "author-123",
 		Content:  "Hello, world!",
-	})
+	}
+
+	var headers, trailers = metadata.MD{}, metadata.MD{}
+	resp, err := client.CreatePost(
+		ctx,
+		req,
+		grpc.Header(&headers),
+		grpc.Trailer(&trailers),
+	)
 
 	if err != nil {
 		switch status.Code(err) {
@@ -45,6 +56,8 @@ func main() {
 		}
 		return
 	}
+
+	fmt.Println("Headers:", headers, "Trailers:", trailers)
 
 	log.Printf("Post created with ID: %d", resp.GetPostId())
 
