@@ -6,7 +6,9 @@ import (
 
 	"github.com/dubininme/grpc/pkg/api/example"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -24,12 +26,24 @@ func main() {
 
 	resp, err := client.CreatePost(context.Background(), &example.CreatePostRequest{
 		Title:    "My first post",
-		Content:  "Hello, world!",
 		AuthorId: "author-123",
+		Content:  "Hello, world!",
 	})
 
 	if err != nil {
-		log.Fatal("could not create post: ", err)
+		switch status.Code(err) {
+		case codes.InvalidArgument:
+			log.Println("Invalid argument:")
+		default:
+			log.Fatal("CreatePost failed:", err)
+		}
+
+		if st, ok := status.FromError(err); ok {
+			log.Println("code", st.Code(), "message", st.Message(), "details", st.Details())
+		} else {
+			log.Println("non gRPC error:", err)
+		}
+		return
 	}
 
 	log.Printf("Post created with ID: %d", resp.GetPostId())
