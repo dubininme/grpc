@@ -10,6 +10,8 @@ import (
 
 	"buf.build/go/protovalidate"
 	"github.com/dubininme/grpc/pkg/api/example"
+
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -60,7 +62,17 @@ type ExampleService struct {
 
 func (s *ExampleService) CreatePost(ctx context.Context, req *example.CreatePostRequest) (*example.CreatePostResponse, error) {
 	if err := s.validator.Validate(req); err != nil {
-		return nil, err
+		st := status.New(codes.InvalidArgument, codes.InvalidArgument.String())
+		st, _ = st.WithDetails(&errdetails.BadRequest{
+			FieldViolations: []*errdetails.BadRequest_FieldViolation{
+				{
+					Field:       "request",
+					Description: err.Error(),
+				},
+			},
+		})
+
+		return nil, st.Err()
 	}
 
 	id := rand.Uint64()
