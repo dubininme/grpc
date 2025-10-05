@@ -24,8 +24,8 @@ func main() {
 
 	server := grpc.NewServer()
 	service := &ExampleService{
-		storage:  make(map[uint64]Post, 1),
-		vaidator: validator,
+		storage:   make(map[uint64]Post, 1),
+		validator: validator,
 	}
 
 	example.RegisterExampleServer(server, service)
@@ -53,13 +53,13 @@ type Post struct {
 type ExampleService struct {
 	example.UnimplementedExampleServer
 
-	vaidator *protovalidate.Validator
-	storage  map[uint64]Post
-	mx       sync.RWMutex
+	validator protovalidate.Validator
+	storage   map[uint64]Post
+	mx        sync.RWMutex
 }
 
 func (s *ExampleService) CreatePost(ctx context.Context, req *example.CreatePostRequest) (*example.CreatePostResponse, error) {
-	if err := s.vaidator.Validate(req); err != nil {
+	if err := s.validator.Validate(req); err != nil {
 		return nil, err
 	}
 
