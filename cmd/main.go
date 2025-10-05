@@ -14,6 +14,7 @@ import (
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 )
@@ -87,6 +88,11 @@ func (s *ExampleService) CreatePost(ctx context.Context, req *example.CreatePost
 	s.mx.Lock()
 	s.storage[id] = *post
 	s.mx.Unlock()
+
+	header := metadata.Pairs("header-key", "val")
+	if err := grpc.SetHeader(ctx, header); err != nil {
+		log.Println("failed to set header:", err)
+	}
 
 	return &example.CreatePostResponse{
 		PostId: id,
