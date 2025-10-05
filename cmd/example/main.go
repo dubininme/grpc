@@ -76,6 +76,11 @@ func (s *ExampleService) CreatePost(ctx context.Context, req *example.CreatePost
 		return nil, st.Err()
 	}
 
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		log.Println("Metadata received:", md)
+	}
+
 	id := rand.Uint64()
 
 	post := &Post{

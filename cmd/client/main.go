@@ -33,9 +33,11 @@ func main() {
 		Content:  "Hello, world!",
 	}
 
+	cctx := metadata.NewOutgoingContext(ctx, metadata.Pairs("client-header-key", "val"))
+
 	var headers, trailers = metadata.MD{}, metadata.MD{}
 	resp, err := client.CreatePost(
-		ctx,
+		cctx,
 		req,
 		grpc.Header(&headers),
 		grpc.Trailer(&trailers),
