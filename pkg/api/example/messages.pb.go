@@ -7,6 +7,7 @@
 package example
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,7 +28,7 @@ type CreatePostRequest struct {
 	// Title of the tweet
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	// Author ID of the tweet
-	AuthorId string `protobuf:"bytes,2,opt,name=author_id,json=author_idd,proto3" json:"author_id,omitempty"`
+	AuthorId string `protobuf:"bytes,2,opt,name=author_id,proto3" json:"author_id,omitempty"`
 	// Content of the tweet
 	Content       string `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -207,12 +208,13 @@ var File_api_example_messages_proto protoreflect.FileDescriptor
 
 const file_api_example_messages_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/example/messages.proto\x12*github.dubininme.grpc.protobuf.api.example\"b\n" +
-	"\x11CreatePostRequest\x12\x14\n" +
-	"\x05title\x18\x01 \x01(\tR\x05title\x12\x1d\n" +
-	"\tauthor_id\x18\x02 \x01(\tR\n" +
-	"author_idd\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\".\n" +
+	"\x1aapi/example/messages.proto\x12*github.dubininme.grpc.protobuf.api.example\x1a\x1bbuf/validate/validate.proto\"\x82\x01\n" +
+	"\x11CreatePostRequest\x12 \n" +
+	"\x05title\x18\x01 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x02R\x05title\x12%\n" +
+	"\tauthor_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tauthor_id\x12$\n" +
+	"\acontent\x18\x03 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x10R\acontent\".\n" +
 	"\x12CreatePostResponse\x12\x18\n" +
 	"\apost_id\x18\x01 \x01(\x04R\apost_id\"\x12\n" +
 	"\x10ListPostsRequest\"\x13\n" +
